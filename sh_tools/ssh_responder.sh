@@ -168,7 +168,7 @@ function f_stop {
 # launch proper command in a (subshell - works even when sourcing this file)
 if [ "$1" == "scan" ]; then
     (f_scan)
-elif [  "$1" == "start" ]; then
+elif [ "$1" == "start" ]; then
     (f_start)
 elif [ "$1" == "stop" ]; then
     (f_stop)

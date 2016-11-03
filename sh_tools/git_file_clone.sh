@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Ric101 - git file clone - v. 1.0.0
 #
