@@ -14,21 +14,26 @@ if [ -n "$sdx_iso" ] && [ ! "${#sdx_flash[@]}" = "0" ]; then
         iso_id="$1"
     fi
 
-    iso_file=$(ls -1 "$mount_iso/ISO/$iso_id"-* | head -1)
-    if [ -n $(ls "$iso_file"-*) ]; then
-        iso_file="$mount_iso/ISO/$iso_file"
-    else
-        echo "ERROR - ISO file not found!"
-    fi
+    iso_file=$(ls -1 "$mount_iso/ISO/$iso_id-"* | head -1)
+    # oddly enough  $iso_file here already includes the full path
 
-    write_cmd="pv -s 16G $iso_file | tee "
     x_last=${sdx_flash[-1]}         # save last element of array
     unset sdx_flash[${#sdx_flash[@]}-1]     # remove last element of array
-    for x in "${sdx_flash[@]}"
-    do
-        write_cmd="$write_cmd >(dd of=/dev/sd$x bs=1M)"
-    done
-    write_cmd="$write_cmd | dd of=/dev/sd$x_last bs=1M"
+    if [ ${#sdx_flash[@]} -eq 0 ]; then
+        # if only one destination
+        write_cmd="pv -s 16G $iso_file | dd of=/dev/sd$x bs=1M"
+    else
+        # if multiple destinations
+        write_cmd="pv -s 16G $iso_file | tee "
+        for x in "${sdx_flash[@]}"
+        do
+            write_cmd="$write_cmd >(dd of=/dev/sd$x bs=1M)"
+        done
+
+        write_cmd="$write_cmd | dd of=/dev/sd$x_last bs=1M"
+    fi
+
+    eval $write_cmd
 
 else
     echo "ERROR - Writing requires ISOs drive and AT LEAST one Flash connected"

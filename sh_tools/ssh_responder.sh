@@ -56,6 +56,7 @@ ARG4="$4"
 
 function f_scan {
     LOCAL_IPS=(${ARG2:-$(hostname -I)})
+    #LOCAL_IPS=("192.168.56" "192.168.1")
     DT=${ARG3:-1}
     LISTEN_PORT=${ARG4:-"$DEF_PORT"}
 

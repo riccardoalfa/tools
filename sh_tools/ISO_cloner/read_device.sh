@@ -14,16 +14,20 @@ if [ -n "$sdx_iso" ] && [ "${#sdx_flash[@]}" = "1" ]; then
     fi
 
     iso_id=$(ls -1 "$mount_iso"/ISO | sort -n | tail -1 | cut -c-6)
+    if [ -z "$isdo_id" ]; then
+        iso_id="000000"
+    fi
     iso_id_=$(echo "$iso_id" | sed 's/^0*//')
     iso_id_=$((iso_id_ + 1))
     iso_id=$(seq -w "$iso_id" "$iso_id_" | tail -1)
     datetime="$(date +%Y-%m-%d@%H:%M)"
     iso_file="$mount_iso/ISO/$iso_id-$datetime---$iso_name.iso"
     if [ ! -f "$iso_file" ]; then
-        dd if="sd${sdx_flash[0]}" | pv -s 16G | of="$iso_file"
+        pv -s 16G "/dev/sd${sdx_flash[0]}" | dd of="$iso_file" bs=1M
     else
         echo "ERROR - ISO file already exists!"
     fi
+
 else
     echo "ERROR - Reading requires ISOs drive and EXACTLY one Flash connected"
 fi

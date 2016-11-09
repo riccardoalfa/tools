@@ -11,8 +11,8 @@ mount_iso="/mnt/ISO"
 usb_id_file="Alfa_ISO_repo.sh"
 declare -a device_letters=("a" "b" "c" "d" "e" "f" "g")
 
-mkdir - p "$mount_tmp" > /dev/null 2>&1
-mkdir - p "$mount_iso" > /dev/null 2>&1
+mkdir -p "$mount_tmp" > /dev/null 2>&1
+mkdir -p "$mount_iso" > /dev/null 2>&1
 
 sdx_iso=""
 declare -a sdx_flash=()
@@ -21,14 +21,13 @@ for x in "${device_letters[@]}"; do
     present=$(ls /dev/ | grep sd"$x"1)
     if [ -n "$present" ]; then
         # echo "into SD$x -> sd$x"1
+        umount "$mount_tmp" > /dev/null 2>&1
         mount "/dev/sd$x"1 "$mount_tmp"
         if [ -f "$mount_tmp/$usb_id_file" ]; then
+            echo ISOs drive found in "sd$x"1!
             sdx_iso="$x"
-            if [ ! -f "$mount_iso/$usb_id_file" ]; then
-                echo "ISOs drive found!"
-                mount "/dev/sd$x"1 "$mount_iso"
-                mkdir - p "$mount_iso/ISO" > /dev/null 2>&1
-            fi
+            mount "/dev/sd$x"1 "$mount_iso" > /dev/null 2>&1
+            mkdir -p "$mount_iso/ISO" > /dev/null 2>&1
         fi
         umount "$mount_tmp"
     fi
