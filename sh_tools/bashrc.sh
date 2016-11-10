@@ -40,3 +40,16 @@ cleanhome () {
 
     rm -f *.retry
 }
+
+# ISO Cloner shortcuts
+leggi() {
+    sudo /home/pi/tools/sh_tools/ISO_cloner/read_device.sh
+}
+
+scrivi() {
+    sudo /home/pi/tools/sh_tools/ISO_cloner/write_iso.sh
+}
+
+elimina() {
+    sudo /home/pi/tools/sh_tools/ISO_cloner/delete_iso.sh
+}
