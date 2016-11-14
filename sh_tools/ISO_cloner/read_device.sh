@@ -16,6 +16,14 @@ if [ -n "$sdx_iso" ] && [ "${#sdx_flash[@]}" = "1" ]; then
         iso_name="$1"
     fi
 
+    while [[ ! "$iso_name" =~ ^[-0-9A-Za-z_]+$ ]]; do
+        echo
+        echo "ATTENTION! Invalid name, please try again (no spaces, no accents, only letter, numbers, underscore or minus sign"
+        echo
+        read -p "How would you like to call this Image? " iso_name
+        echo
+    done
+
     iso_id=$(ls -1 "$mount_iso"/ISO | sort -n | tail -1 | cut -c-6)
     if [ -z "$iso_id" ]; then
         iso_id="000000"
